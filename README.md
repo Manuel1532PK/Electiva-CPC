@@ -1,58 +1,43 @@
-﻿# Electiva CPC - Sistema Experto MIMETIC AI
+# Electiva CPC - Sistema Experto MIMETIC AI
 
 Sistema de apoyo al diagnóstico médico con motor de sistema experto, desarrollado como parte de la Electiva CPC. Este proyecto implementa una arquitectura completa con backend en FastAPI, frontend en React/Vite, base de datos MongoDB Atlas y funcionalidades de diagnóstico conversacional asistido por IA.
 
-## Descripción del Proyecto
+## ¿Qué es MIMETIC AI?
 
-MIMETIC AI es un sistema conversacional de apoyo al diagnóstico médico que permite a los médicos registrar pacientes, describir síntomas en lenguaje natural y obtener diagnósticos diferenciales con sus respectivos tratamientos. El sistema incluye control del médico sobre diagnósticos y tratamientos, ajuste de dosis por peso/edad/embarazo/alergias y generación de historias clínicas en PDF.
+MIMETIC AI es un sistema conversacional de apoyo al diagnóstico médico que permite a los médicos registrar pacientes, describir síntomas en lenguaje natural y obtener diagnósticos diferenciales con sus respectivos tratamientos. Incluye control del médico sobre diagnósticos y tratamientos, ajuste de dosis por peso/edad/embarazo/alergias y generación de historias clínicas en PDF.
 
 ## Tecnologías Utilizadas
 
-### Backend
-- **Python 3.11+** - Lenguaje de programación
-- **FastAPI** - Framework web para APIs
-- **Motor** - Driver asíncrono para MongoDB
-- **Pydantic** - Validación de datos
-- **Uvicorn** - Servidor ASGI
-
-### Frontend
-- **React 18.3.1** - Biblioteca para interfaces de usuario
-- **Vite** - Herramienta de construcción
-- **TypeScript** - Tipado estático
-- **React Router DOM** - Enrutamiento
-- **@react-oauth/google** - Autenticación con Google
-
-### Base de Datos
-- **MongoDB Atlas** - Base de datos NoSQL en la nube
-
-### Servicios Externos
-- **Gmail API / SMTP** - Envío de correos electrónicos
-- **SendGrid** - Servicio alternativo de correo
-- **Google OAuth 2.0** - Autenticación social
-- **Gemini / OpenAI / Together** - Proveedores de IA
+| Capa | Tecnologías |
+|---|---|
+| **Backend** | Python 3.11+, FastAPI, Motor (MongoDB), Pydantic, Uvicorn |
+| **Frontend** | React 18.3.1, Vite, TypeScript, React Router DOM, @react-oauth/google |
+| **Base de Datos** | MongoDB Atlas |
+| **IA y Servicios** | Gemini, OpenAI, Together, Gmail API, SMTP, SendGrid, Google OAuth 2.0 |
 
 ## Arquitectura del Sistema
 
-`
-Frontend (React/Vite) ←→ Backend (FastAPI) ←→ MongoDB Atlas
-                            ↓
-                    Gmail API / Gemini / OpenAI / Together
+`	ext
+Frontend (React + Vite) ──► Backend (FastAPI) ──► MongoDB Atlas
+                              │
+                              ▼
+                Gmail API / SMTP / SendGrid · Gemini / OpenAI / Together
 `
 
 ## Roles del Sistema
 
-| Rol | Permisos |
+| Rol | Descripción |
 |---|---|
-| super_admin | Acceso completo al sistema, gestión de usuarios, hospitales y alimentación del catálogo de conocimiento (importación de archivos CSV/Excel/JSON) |
-| dmin | Gestión de usuarios y hospitales |
-| medico | Chat de diagnóstico, historias clínicas, aprobación/modificación/descartar tratamientos |
-| paciente | Consulta de sus diagnósticos y tratamientos |
+| **super_admin** | Acceso completo al sistema. Gestiona usuarios, hospitales y el catálogo de conocimiento (importación de CSV, Excel o JSON). |
+| **admin** | Gestiona usuarios y hospitales. |
+| **médico** | Utiliza el chat de diagnóstico, gestiona historias clínicas y aprueba, modifica o descarta tratamientos. |
+| **paciente** | Consulta sus diagnósticos y tratamientos asignados. |
 
 ## Estructura del Proyecto
 
 ### Backend (/backend)
 
-`
+`	ext
 backend/
 ├── app/
 │   ├── auth/                # Autenticación JWT, OAuth y RBAC
@@ -63,7 +48,7 @@ backend/
 │   ├── models/              # Modelos Pydantic
 │   ├── routes/              # Endpoints de la API
 │   └── utils.py             # Utilidades (normalización de texto)
-├── main.py                  # Punto de entrada de la aplicación FastAPI
+├── main.py                  # Punto de entrada de FastAPI
 ├── seed_data.py             # Datos iniciales del catálogo
 ├── requirements.txt         # Dependencias Python
 └── README.md                # Documentación específica del backend
@@ -71,74 +56,82 @@ backend/
 
 ### Frontend (/frontend)
 
-`
+`	ext
 frontend/
 ├── src/
 │   ├── api/                 # Cliente HTTP y servicios API
 │   ├── auth/                # Contexto de autenticación
 │   ├── chat/                # Componentes del chat de diagnóstico
 │   ├── components/
-│   │   └── admin/           # Componentes para panel de administración
+│   │   └── admin/           # Componentes del panel de administración
 │   ├── context/             # Contextos React
 │   ├── pages/               # Páginas de la aplicación
 │   └── App.tsx               # Componente principal y rutas
 ├── package.json             # Dependencias Node.js
 ├── vite.config.ts           # Configuración de Vite
-└── README.md                 # Documentación específica del frontend
+└── README.md                # Documentación específica del frontend
 `
 
-## Características Implementadas
+## Características Principales
 
 ### Fase 1 - Control del médico sobre diagnóstico y tratamiento
-- Aprobación, modificación o descarte de fármacos sugeridos por el sistema
-- Ajuste de dosis pediátrico por peso (mg/kg)
-- Selección de medicamentos bajo guías colombianas
-- Filtrado por alergias, embarazo y comorbilidades
+- **Aprobación o rechazo de tratamientos**: El médico puede aprobar, modificar o descartar los fármacos sugeridos.
+- **Ajuste de dosis pediátrico**: Cálculo de dosis por peso (mg/kg).
+- **Seguridad del tratamiento**: Filtrado por alergias, embarazo y comorbilidades, siguiendo guías colombianas.
 
-### Fase 2 - Exactitud del diagnóstico
-- Ponderación IDF y secondary_score por demografía (edad/sexo)
-- Motor de data_treatment para limpieza y entrenamiento del catálogo
-- Preguntas discriminantes para desambiguar diagnósticos
-- Auto-detección de síntomas a partir de signos vitales
-- Explicaciones en español sencillo para el paciente (patient_summary)
+### Fase 2 - Mayor precisión en el diagnóstico
+- **Ponderación inteligente**: Uso de IDF y secondary_score según edad y sexo para ordenar diagnósticos diferenciales.
+- **Preguntas discriminantes**: El sistema realiza preguntas específicas cuando hay varios diagnósticos posibles.
+- **Detección automática de síntomas**: Identifica síntomas a partir de signos vitales (fiebre, taquipnea, presión arterial, entre otros).
+- **Explicaciones para el paciente**: Genera resúmenes comprensibles (patient_summary).
 
-### Sistema Experto - Alimentación de conocimiento
-- Interfaz para super_admin que permite importar conocimiento desde archivos **CSV, Excel (XLSX) o JSON**
-- Endpoint POST /api/knowledge/import-file con validación y upsert idempotente
-- CRUD completo del catálogo con control de roles
-- Normalización estricta (minúsculas, sin diacríticos) para evitar colisiones
+### Sistema Experto - Alimentación del Conocimiento
+- **Importación flexible**: Permite importar el catálogo desde archivos CSV, Excel (XLSX) o JSON (solo para super_admin).
+- **Actualización inteligente**: Realiza upsert idempotente para evitar duplicados.
+- **Normalización estricta**: Convierte a minúsculas y elimina diacríticos para evitar colisiones (ej. "Vómito" y "vomito").
+- **CRUD completo**: Gestión del catálogo con control de permisos por rol.
 
 ## Catálogo de Conocimiento
 
-El sistema cuenta con el siguiente catálogo inicial (seed):
-
 | Colección | Registros | Campos |
 |---|---|---|
-| symptoms | 276 | 
+| **symptoms** | 276 | 
 ame, description, category |
-| diseases | 51 | 
+| **diseases** | 51 | 
 ame, description, symptoms, severity |
-| 	reatments | 51 | disease_name, medicines, lternative_medicines, 
+| **treatments** | 51 | disease_name, medicines, lternative_medicines, 
 on_pharmacological_treatments |
 
 ## Instalación y Ejecución
 
 ### Requisitos Previos
-- Python 3.11+ (para backend)
-- Node.js 18+ (para frontend)
-- Instancia de MongoDB Atlas o MongoDB local
+- [Python 3.11+](https://www.python.org/)
+- [Node.js 18+](https://nodejs.org/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas) o MongoDB local
 
-### Backend
+### 1. Clonar el repositorio
+
+`ash
+git clone https://github.com/Manuel1532PK/Electiva-CPC.git
+cd Electiva-CPC
+`
+
+### 2. Configurar el Backend
 
 `ash
 cd backend
 pip install -r requirements.txt
+`
+
+Crear un archivo .env con las variables de entorno necesarias (ver sección "Variables de Entorno"). Luego ejecutar:
+
+`ash
 uvicorn main:app --port 8001 --reload
 `
 
-El backend estará disponible en http://localhost:8001. Swagger UI: http://localhost:8001/docs
+El backend estará disponible en [http://localhost:8001](http://localhost:8001). Documentación Swagger en [http://localhost:8001/docs](http://localhost:8001/docs).
 
-### Frontend
+### 3. Configurar el Frontend
 
 `ash
 cd frontend
@@ -146,11 +139,9 @@ npm install
 npm run dev
 `
 
-El frontend estará disponible en http://localhost:5173
+El frontend estará disponible en [http://localhost:5173](http://localhost:5173).
 
-### Docker
-
-Para ejecutar MongoDB localmente:
+### 4. MongoDB con Docker (opcional)
 
 `ash
 docker-compose up -d
@@ -158,35 +149,52 @@ docker-compose up -d
 
 ## Variables de Entorno
 
-### Backend (.env)
-Principales variables de configuración (ver ackend/app/config.py para lista completa):
-- MONGODB_URL - Cadena de conexión a MongoDB
-- MONGODB_DB_NAME - Nombre de la base de datos
-- JWT_SECRET - Clave secreta para JWT
-- GEMINI_API_KEY / OPENAI_API_KEY / TOGETHER_API_KEY - Claves para proveedores de IA
-- GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET - OAuth de Google
-- SMTP_* / GMAIL_API_* / SENDGRID_API_KEY - Configuración de correo
-- CORS_ORIGINS - Orígenes permitidos
+### Backend (ackend/.env)
 
-### Frontend (.env)
-- VITE_API_URL - URL del backend (ej.: http://localhost:8001 en desarrollo)
+Las principales variables de configuración son:
+
+| Variable | Descripción | Requerida |
+|---|---|---|
+| MONGODB_URL | Cadena de conexión a MongoDB Atlas o MongoDB local | Sí |
+| MONGODB_DB_NAME | Nombre de la base de datos | No (por defecto: mimetic_ai) |
+| JWT_SECRET | Clave secreta para tokens JWT | Sí |
+| JWT_ALGORITHM | Algoritmo JWT | No (por defecto: HS256) |
+| JWT_EXPIRATION_HOURS | Duración del token en horas | No (por defecto: 24) |
+| GEMINI_API_KEY | Clave API para Google Gemini | Recomendado |
+| OPENAI_API_KEY | Clave API para OpenAI | Opcional |
+| TOGETHER_API_KEY | Clave API para Together | Opcional |
+| GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET | Para autenticación con Google OAuth | Opcional |
+| GMAIL_API_CLIENT_ID / GMAIL_API_CLIENT_SECRET / GMAIL_API_REFRESH_TOKEN | Para envío de correos con Gmail API | Opcional |
+| SMTP_HOST / SMTP_USER / SMTP_PASSWORD | Para envío de correos por SMTP | Opcional |
+| SENDGRID_API_KEY | Para envío de correos con SendGrid | Opcional |
+| CORS_ORIGINS | Orígenes permitidos (separados por coma) | Opcional |
+| LOG_LEVEL | Nivel de logging | No (por defecto: INFO) |
+
+> Para más detalles, consultar ackend/app/config.py.
+
+### Frontend (rontend/.env)
+
+| Variable | Descripción |
+|---|---|
+| VITE_API_URL | URL del backend. En desarrollo: http://localhost:8001 |
 
 ## Endpoints Principales
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| POST | /api/auth/register | Registro de usuario (con verificación de correo) |
+| POST | /api/auth/register | Registro de usuario con verificación por correo electrónico |
 | POST | /api/auth/login | Inicio de sesión |
 | POST | /api/auth/verify-email | Verificación de código de 6 dígitos |
 | POST | /api/auth/social-login | Inicio de sesión con Google |
-| POST | /api/auth/create-user | Creación de usuarios (admin/super_admin) |
+| POST | /api/auth/create-user | Creación de usuario (admin/super_admin) |
+| GET | /api/auth/me | Obtener perfil del usuario autenticado |
 | POST | /api/converse | Chat conversacional de diagnóstico |
 | POST | /api/diagnose | Diagnóstico por lista de síntomas |
-| POST | /api/report | Generación de historia clínica en PDF |
-| GET | /api/knowledge/symptoms | Listado de síntomas |
-| GET | /api/knowledge/diseases | Listado de enfermedades |
-| GET | /api/knowledge/treatments | Listado de tratamientos |
-| POST | /api/knowledge/import-file | Importación de catálogo (super_admin) |
+| POST | /api/report | Generar historia clínica en PDF |
+| GET | /api/knowledge/symptoms | Listar síntomas |
+| GET | /api/knowledge/diseases | Listar enfermedades |
+| GET | /api/knowledge/treatments | Listar tratamientos |
+| POST | /api/knowledge/import-file | Importar catálogo (solo super_admin) |
 | GET | /health | Estado del servicio |
 
 ## Pruebas
@@ -205,24 +213,25 @@ npm run test
 
 ## Despliegue
 
-- **Frontend**: Desplegado en Vercel (configurar VITE_API_URL hacia backend)
-- **Backend**: Desplegado en Render (usar start_backend.ps1 como comando de inicio)
-- **Base de datos**: MongoDB Atlas
+- **Frontend**: [Vercel](https://vercel.com/) - Configurar VITE_API_URL apuntando al backend. Comando de build: 
+pm run build. Directorio de salida: dist.
+- **Backend**: [Render](https://render.com/) - Usar start_backend.ps1 como comando de inicio.
+- **Base de datos**: [MongoDB Atlas](https://www.mongodb.com/atlas).
 
-## Características de Seguridad
+## Seguridad
 
-- Autenticación mediante JWT
-- Verificación de correo electrónico con código de 6 dígitos (válido por 10 minutos)
-- Control de acceso basado en roles (RBAC)
-- Autenticación OAuth 2.0 con Google
-- Validación estricta de datos con Pydantic
-- Logging estructurado con equest_id
-
-## Contribución
-
-Este proyecto fue desarrollado para la Electiva CPC, siguiendo las fases de implementación especificadas para el desarrollo del sistema experto médico.
+- **Autenticación JWT**: Tokens seguros para sesiones.
+- **Verificación por correo**: Código de 6 dígitos válido por 10 minutos.
+- **RBAC**: Control de acceso basado en roles (super_admin, admin, médico, paciente).
+- **OAuth 2.0**: Inicio de sesión con Google.
+- **Validación de datos**: Mediante modelos Pydantic.
+- **Logging estructurado**: Con equest_id para trazabilidad.
 
 ## Documentación Adicional
 
-- [Documentación Backend](/backend/README.md)
-- [Documentación Frontend](/frontend/README.md)
+- [Documentación del Backend](/backend/README.md)
+- [Documentación del Frontend](/frontend/README.md)
+
+## Créditos
+
+Desarrollado como parte de la **Electiva CPC**.
