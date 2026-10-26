@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: mimetic-ai-api
+    runtime: python
+    repo: https://github.com/SUBHWEI/mimetic-ai
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGODB_URL
+        sync: false
