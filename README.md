@@ -1,6 +1,6 @@
-# Electiva CPC - Sistema Experto MIMETIC AI
+# Electiva CPC - MIMETIC AI
 
-Sistema de apoyo al diagnóstico médico con motor de sistema experto, desarrollado como parte de la Electiva CPC. Este proyecto implementa una arquitectura completa con backend en FastAPI, frontend en React/Vite, base de datos MongoDB Atlas y funcionalidades de diagnóstico conversacional asistido por IA.
+Sistema de apoyo al diagnóstico médico, desarrollado como parte de la Electiva CPC. Este proyecto implementa una arquitectura completa con backend en FastAPI, frontend en React/Vite, base de datos MongoDB Atlas y funcionalidades de diagnóstico conversacional asistido por IA.
 
 ## ¿Qué es MIMETIC AI?
 
