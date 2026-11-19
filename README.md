@@ -153,3 +153,13 @@ frontend/
 - **OAuth 2.0**: Inicio de sesión con Google.
 - **Validación de datos**: Mediante modelos Pydantic.
 - **Logging estructurado**: Con request_id para trazabilidad.
+
+## Despliegue de esta rama
+
+Esta rama (`produccion-frontend`) contiene la configuración y el plan de despliegue del **frontend en Vercel**:
+
+- [`Docs/plan_despliegue_frontend.md`](Docs/plan_despliegue_frontend.md) — pasos, Root Directory, variables de entorno, verificación y rollback.
+- [`Docs/prompt/plan_auditoria_mimetic_v1.2.md`](Docs/prompt/plan_auditoria_mimetic_v1.2.md) — plan de auditoría técnica.
+- [`Docs/tecnologias_especificas_mimetic.md`](Docs/tecnologias_especificas_mimetic.md) — plan de tecnologías.
+
+El backend se despliega por separado desde la rama `produccion-backend`.

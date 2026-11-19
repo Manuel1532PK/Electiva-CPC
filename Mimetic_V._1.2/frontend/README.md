@@ -73,5 +73,7 @@ npm run lint       # eslint
 ## Despliegue (Vercel)
 
 1. Subir el repo en Vercel → framework preset **Vite**.
-2. Configurar `VITE_API_URL` apuntando al backend (Render).
-3. Build command: `npm run build` · Output dir: `dist`.
+2. Configurar `VITE_API_URL=https://mimetic-ai-api.onrender.com`.
+3. Build command: `npm run build` · Output dir: `dist` · Root Directory: `Mimetic_V._1.2/frontend`.
+
+El procedimiento completo (rama `produccion-frontend`, variables, verificación y rollback) está en [`Docs/plan_despliegue_frontend.md`](../../Docs/plan_despliegue_frontend.md).
