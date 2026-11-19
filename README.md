@@ -153,3 +153,13 @@ frontend/
 - **OAuth 2.0**: Inicio de sesión con Google.
 - **Validación de datos**: Mediante modelos Pydantic.
 - **Logging estructurado**: Con request_id para trazabilidad.
+
+## Despliegue de esta rama
+
+Esta rama (`produccion-backend`) contiene la configuración y el plan de despliegue del **backend en Render**:
+
+- [`Docs/plan_despliegue_backend.md`](Docs/plan_despliegue_backend.md) — Blueprint, rama, `rootDir`, variables de entorno, verificación y rollback.
+- [`Docs/prompt/plan_auditoria_mimetic_v1.2.md`](Docs/prompt/plan_auditoria_mimetic_v1.2.md) — plan de auditoría técnica.
+- [`Docs/tecnologias_especificas_mimetic.md`](Docs/tecnologias_especificas_mimetic.md) — plan de tecnologías.
+
+El frontend se despliega por separado desde la rama `produccion-frontend`.

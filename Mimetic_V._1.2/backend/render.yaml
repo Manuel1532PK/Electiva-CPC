@@ -2,11 +2,42 @@ services:
   - type: web
     name: mimetic-ai-api
     runtime: python
-    repo: https://github.com/SUBHWEI/mimetic-ai
-    branch: main
-    rootDir: backend
+    plan: free
+    repo: https://github.com/Manuel1532PK/Electiva-CPC.git
+    branch: produccion-backend
+    rootDir: Mimetic_V._1.2/backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
       - key: MONGODB_URL
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: mimetic_ai
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_EXPIRATION_HOURS
+        value: "24"
+      - key: CORS_ORIGINS
+        value: https://mimetic-ai.vercel.app
+      - key: LOG_LEVEL
+        value: INFO
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GMAIL_API_CLIENT_ID
+        sync: false
+      - key: GMAIL_API_CLIENT_SECRET
+        sync: false
+      - key: GMAIL_API_REFRESH_TOKEN
+        sync: false
+      - key: SENDGRID_API_KEY
         sync: false
