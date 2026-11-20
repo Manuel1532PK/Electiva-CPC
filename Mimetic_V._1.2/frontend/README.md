@@ -76,4 +76,4 @@ npm run lint       # eslint
 2. Configurar `VITE_API_URL=https://mimetic-ai-api.onrender.com`.
 3. Build command: `npm run build` · Output dir: `dist` · Root Directory: `Mimetic_V._1.2/frontend`.
 
-El procedimiento completo (rama `produccion-frontend`, variables, verificación y rollback) está en [`Docs/plan_despliegue_frontend.md`](../../Docs/plan_despliegue_frontend.md).
+El procedimiento completo (rama `produccion-frontend`, variables, verificación y rollback) está en [`Docs/prompt/planFrontend.md`](../../Docs/prompt/planFrontend.md).

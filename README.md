@@ -158,7 +158,7 @@ frontend/
 
 Esta rama (`produccion-frontend`) contiene la configuración y el plan de despliegue del **frontend en Vercel**:
 
-- [`Docs/plan_despliegue_frontend.md`](Docs/plan_despliegue_frontend.md) — pasos, Root Directory, variables de entorno, verificación y rollback.
+- [`Docs/prompt/planFrontend.md`](Docs/prompt/planFrontend.md) — pasos, Root Directory, variables de entorno, verificación y rollback.
 - [`Docs/prompt/plan_auditoria_mimetic_v1.2.md`](Docs/prompt/plan_auditoria_mimetic_v1.2.md) — plan de auditoría técnica.
 - [`Docs/tecnologias_especificas_mimetic.md`](Docs/tecnologias_especificas_mimetic.md) — plan de tecnologías.
 

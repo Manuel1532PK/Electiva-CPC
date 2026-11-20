@@ -11,7 +11,7 @@
 
 ## 1. Alcance y supuestos
 
-Este plan cubre únicamente el **frontend** (React + Vite + TypeScript). El backend se despliega por separado en Render siguiendo `Docs/plan_despliegue_backend.md` de la rama `produccion-backend`.
+Este plan cubre únicamente el **frontend** (React + Vite + TypeScript). El backend se despliega por separado en Render siguiendo `Docs/prompt/planBackend.md` de la rama `produccion-backend`.
 
 Se asume que:
 
