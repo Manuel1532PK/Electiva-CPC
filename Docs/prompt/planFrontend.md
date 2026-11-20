@@ -128,6 +128,7 @@ Ejecución: `cd Mimetic_V._1.2/frontend && npm test`. Resultado actual: **6/6 en
   - Línea de tiempo moderna.
   - Modal rediseñado.
   - Responsive en móvil.
+- Se agregó una pestaña **“Diagnósticos”** en el portal del paciente para mostrar, consulta por consulta, todos los diagnósticos confirmados con severidad y descripción.
 
 ### 10.3 Portal de médico
 

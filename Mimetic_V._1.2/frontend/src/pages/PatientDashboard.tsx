@@ -12,7 +12,7 @@ import {
   type ClinicalHistory,
 } from '../api/patient'
 
-type Tab = 'resumen' | 'historial' | 'tratamientos'
+type Tab = 'resumen' | 'diagnosticos' | 'historial' | 'tratamientos'
 
 const TZ = 'America/Bogota'
 
@@ -144,6 +144,12 @@ export default function PatientDashboard() {
           Resumen
         </button>
         <button
+          className={`pd-tab ${tab === 'diagnosticos' ? 'active' : ''}`}
+          onClick={() => setTab('diagnosticos')}
+        >
+          Diagnósticos
+        </button>
+        <button
           className={`pd-tab ${tab === 'historial' ? 'active' : ''}`}
           onClick={() => setTab('historial')}
         >
@@ -160,6 +166,9 @@ export default function PatientDashboard() {
       <div className="pd-content">
         {tab === 'resumen' && summary && (
           <ResumenTab summary={summary} clinicalHistory={clinicalHistory} onViewDetail={handleViewDetail} />
+        )}
+        {tab === 'diagnosticos' && (
+          <DiagnosticosTab sessions={sessions} />
         )}
         {tab === 'historial' && (
           <HistorialTab
@@ -288,6 +297,56 @@ function ResumenTab({ summary, clinicalHistory, onViewDetail }: {
           <p>Cuando tu médico realice una consulta, aparecerá aquí tu información.</p>
         </div>
       )}
+    </div>
+  )
+}
+
+function DiagnosticosTab({ sessions }: { sessions: PatientSession[] }) {
+  const sessionsWithDiagnoses = sessions.filter(s => s.diagnoses.length > 0)
+
+  if (sessionsWithDiagnoses.length === 0) {
+    return (
+      <div className="pd-empty">
+        <div className="pd-empty-icon">🩺</div>
+        <h3>No tienes diagnósticos registrados</h3>
+        <p>Cuando tu médico confirme un diagnóstico, aparecerá aquí con su severidad y explicación.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="pd-treatments">
+      {sessionsWithDiagnoses.map(session => (
+        <div key={session.id} className="pd-treatment-card">
+          <div className="pd-treatment-header">
+            <div>
+              <h3>{formatDate(session.date)}</h3>
+              <div className="pd-treatment-meta">
+                {session.hospital_name && <span>🏥 {session.hospital_name}</span>}
+                {session.doctor_name && <span>👨‍⚕️ Dr. {session.doctor_name}</span>}
+                {session.consultation_reason && <span>📝 {session.consultation_reason}</span>}
+              </div>
+            </div>
+          </div>
+
+          <div className="pd-treatment-body">
+            <h4>Diagnósticos confirmados</h4>
+            {session.diagnoses.map((d, i) => (
+              <div key={i} className="pd-diagnosis-card">
+                <div className="pd-diagnosis-header">
+                  <span className="pd-diagnosis-name">{d.disease_name}</span>
+                  {d.severity && (
+                    <span className="pd-severity" style={{ background: severityColor(d.severity) }}>
+                      {severityLabel(d.severity)}
+                    </span>
+                  )}
+                </div>
+                {d.description && <p className="pd-diagnosis-desc">{d.description}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
