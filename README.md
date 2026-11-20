@@ -156,6 +156,21 @@ frontend/
 
 ## Despliegue de esta rama
 
+produccion-frontend
+=======
+produccion-backend
+Esta rama (`produccion-backend`) contiene la configuración y el plan de despliegue del **backend en Render**:
+
+- **Backend:** https://mimetic-ai-api-v12.onrender.com
+- **Frontend:** https://mimetic-ai-v12.vercel.app
+
+- [`Docs/prompt/planBackend.md`](Docs/prompt/planBackend.md) — Blueprint, rama, `rootDir`, variables de entorno, verificación y rollback.
+- [`Docs/prompt/plan_auditoria_mimetic_v1.2.md`](Docs/prompt/plan_auditoria_mimetic_v1.2.md) — plan de auditoría técnica.
+- [`Docs/tecnologias_especificas_mimetic.md`](Docs/tecnologias_especificas_mimetic.md) — plan de tecnologías.
+
+El frontend se despliega por separado desde la rama `produccion-frontend`.
+=======
+main
 Esta rama (`produccion-frontend`) contiene la configuración y el plan de despliegue del **frontend en Vercel**:
 
 - **Frontend:** https://mimetic-ai-v12.vercel.app

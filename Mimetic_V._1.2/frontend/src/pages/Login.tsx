@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { API } from '../config'
 import SocialLogin from '../components/SocialLogin'
 import '../styles/mimetic.css'
 
@@ -39,8 +40,11 @@ export default function Login() {
     let active = true
     const started = performance.now()
 
-    fetch('/health')
-      .then(res => res.json())
+    fetch(`${API}/health`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Health check failed: ${res.status}`)
+        return res.json()
+      })
       .then(data => {
         if (!active) return
         setHealth({
