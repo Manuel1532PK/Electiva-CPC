@@ -156,6 +156,8 @@ frontend/
 
 ## Despliegue de esta rama
 
+produccion-frontend
+=======
 produccion-backend
 Esta rama (`produccion-backend`) contiene la configuración y el plan de despliegue del **backend en Render**:
 
@@ -168,6 +170,7 @@ Esta rama (`produccion-backend`) contiene la configuración y el plan de desplie
 
 El frontend se despliega por separado desde la rama `produccion-frontend`.
 =======
+main
 Esta rama (`produccion-frontend`) contiene la configuración y el plan de despliegue del **frontend en Vercel**:
 
 - **Frontend:** https://mimetic-ai-v12.vercel.app
