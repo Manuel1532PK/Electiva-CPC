@@ -5,7 +5,7 @@
 **Directorio de la aplicación:** `Mimetic_V._1.2/frontend`
 **URL de producción:** `https://mimetic-ai-v12.vercel.app`
 **API consumida:** `https://mimetic-ai-api-v12.onrender.com` (servicio desplegado desde la rama `produccion-backend`)
-**Fecha:** 2026-11-19
+**Fecha:** 2026-11-20
 
 ---
 
@@ -106,3 +106,53 @@ Ejecución: `cd Mimetic_V._1.2/frontend && npm test`. Resultado actual: **6/6 en
 - **Node local:** si se usa Node 24.13, `jsdom@30` avisa de versión no soportada; usar Node ≥ 24.15 para eliminar la advertencia.
 - **CORS:** el backend debe tener el dominio exacto de Vercel en `CORS_ORIGINS`; de lo contrario el frontend cargará pero las llamadas API fallarán.
 - **Secretos:** nunca subir `.env` al repositorio; usar solo `.env.example` como plantilla.
+
+## 10. Actualización 2026-11-20 — Frontend
+
+### 10.1 Correcciones
+
+- `Login.tsx`
+  - El health check ahora consulta `${API}/health` en lugar de `/health`.
+  - Se valida `res.ok` antes de leer la respuesta.
+- `Register.tsx`
+  - Muestra `dev_code` únicamente si el backend lo devuelve.
+
+### 10.2 Portal del paciente
+
+- Se creó `src/styles/portal.css` con el lenguaje visual actual (Stitch/MIMETIC).
+- `PatientDashboard.tsx` ahora importa ese archivo en lugar de `App.css`.
+- El portal del paciente quedó verificado con:
+  - Header moderno con blur.
+  - Tarjetas blancas con sombras.
+  - Pestañas tipo píldora.
+  - Línea de tiempo moderna.
+  - Modal rediseñado.
+  - Responsive en móvil.
+
+### 10.3 Portal de médico
+
+- Se verificó que el portal de médico (`ChatApp`) ya usa `mimetic.css`.
+- La raíz del portal carga con la clase `mimetic-ui`.
+- Se creó una cuenta de prueba local:
+  - Correo: `medico.prueba@mimetic.test`
+  - Contraseña: `Medico123!`
+  - Rol: `medico`
+  - Base de datos: `mimetic_ai_local_test`
+
+### 10.4 Verificación
+
+- `npm run build`: correcto.
+- `npm test`: **6/6 en verde**.
+- Consola del navegador: sin errores.
+
+### 10.5 Estado de rama
+
+- Commit de trabajo: `59bc66c`
+- Commit equivalente en `main`: `49c36da`
+- No se ha hecho commit ni push de este plan todavía.
+
+### 10.6 Pendiente
+
+- Revisar el plan con el dueño.
+- Si se aprueba, hacer commit en `produccion-frontend`.
+- Redesplegar en Vercel.
