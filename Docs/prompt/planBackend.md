@@ -6,7 +6,7 @@
 **Servicio Render:** `mimetic-ai-api`
 **URL de producción:** `https://mimetic-ai-api-v12.onrender.com`
 **Frontend consumidor:** `https://mimetic-ai-v12.vercel.app` (desplegado desde la rama `produccion-frontend`)
-**Fecha:** 2026-11-19
+**Fecha:** 2026-11-20
 
 ---
 
@@ -42,7 +42,7 @@ pip install -r requirements.txt -r requirements-dev.txt
 pytest -q
 ```
 
-Resultado esperado verificado en este repositorio: **59 pruebas pasadas**.
+Resultado esperado verificado en este repositorio: **65 pruebas pasadas**.
 
 ## 4. Creación del servicio en Render
 
@@ -122,7 +122,7 @@ Tras el rollback, repetir la sección 6.
 | `tests/test_normalization.py` | Normalización estricta (minúsculas, sin diacríticos) |
 | `tests/test_pytest_helpers.py` | Utilidades de prueba |
 
-Ejecución: `cd Mimetic_V._1.2/backend && pytest -q`. Resultado actual: **59/59 en verde** (con Python 3.13 en este PC; Render usa 3.11.11).
+Ejecución: `cd Mimetic_V._1.2/backend && pytest -q`. Resultado actual: **65/65 en verde** (con Python 3.13 en este PC; Render usa 3.11.11).
 
 ## 9. Riesgos y recomendaciones
 
@@ -131,3 +131,46 @@ Ejecución: `cd Mimetic_V._1.2/backend && pytest -q`. Resultado actual: **59/59 
 - **Correo:** SMTP no funciona en Render free; usar Gmail API o SendGrid.
 - **CORS/JWT:** son las causas más comunes de fallos después del despliegue; verificarlos antes de probar flujos clínicos.
 - **Secretos:** `JWT_SECRET` y credenciales externas solo en Render; el repositorio incluye `.env.example` como plantilla.
+
+## 10. Actualización 2026-11-20 — Backend
+
+### 10.1 Correo
+
+- `send_verification_code()` ahora entrega el código de forma **sincrónica** y devuelve el resultado real (`delivered`, `provider`, `error`).
+- Si no hay ningún proveedor de correo configurado, `POST /api/auth/register` responde **503** en lugar de “enviado”.
+- Se agregó soporte explícito para:
+  - `EMAIL_PROVIDER=auto | gmail_api | sendgrid | smtp | none`
+  - `DEV_EMAIL_FALLBACK` (solo desarrollo)
+  - `FROM_EMAIL`
+- El script `setup_gmail_api.py` se actualizó a OAuth con **PKCE** y redirect local `http://127.0.0.1:8090/callback`.
+- Se verificó el envío real con **Gmail API** usando la cuenta `mimequack@gmail.com`.
+- La entrega local quedó probada con un SMTP de pruebas; la entrega real en producción requiere configurar en Render:
+  - `EMAIL_PROVIDER=gmail_api`
+  - `FROM_EMAIL=MIMETIC <mimequack@gmail.com>`
+  - `GMAIL_API_CLIENT_ID`
+  - `GMAIL_API_CLIENT_SECRET`
+  - `GMAIL_API_REFRESH_TOKEN`
+
+### 10.2 Pruebas nuevas
+
+- Se agregó `tests/test_email_sender.py`.
+- Pruebas verificadas: **65/65 en verde**.
+- Cobertura nueva:
+  - sin proveedor → error explícito
+  - fallback de desarrollo → `dev_code`
+  - entrega por SMTP → éxito
+  - fallo de proveedor → error reportado
+  - endpoint → `503` cuando no hay entrega
+  - endpoint → `dev_code` cuando hay fallback
+
+### 10.3 Estado de rama
+
+- Commit de trabajo: `59bc66c`
+- Commit equivalente en `main`: `49c36da`
+- Rama `origin/produccion-backend` quedó en `865bbd5` por un merge desde `main`; no se forzó el push.
+
+### 10.4 Pendiente
+
+- Configurar en Render las variables de Gmail API.
+- Redesplegar backend y verificar el envío real desde producción.
+- No hacer commit ni push de este plan hasta que el dueño lo revise.
