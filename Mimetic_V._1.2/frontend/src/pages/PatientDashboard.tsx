@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
+import '../styles/portal.css'
 import {
   getMyClinicalHistory,
   getMySessions,

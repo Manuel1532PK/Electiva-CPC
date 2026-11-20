@@ -1,0 +1,905 @@
+/* ==========================================================
+   MIMETIC · Portal del paciente (versión actual Stitch)
+   ========================================================== */
+
+.app {
+  --portal-bg: #faf8ff;
+  --portal-surface: #ffffff;
+  --portal-surface-soft: #f8fafc;
+  --portal-border: #e2e7ff;
+  --portal-text: #131b2e;
+  --portal-muted: #42474e;
+  --portal-primary: #001f3a;
+  --portal-secondary: #00658d;
+  --portal-accent: #41befd;
+  --portal-accent-soft: #c6e7ff;
+  --portal-danger: #ba1a1a;
+  --portal-radius-lg: 18px;
+  --portal-radius-md: 14px;
+  --portal-radius-sm: 10px;
+  --portal-shadow-lg: 0 24px 50px -24px rgba(11, 53, 88, 0.35);
+  --portal-shadow-md: 0 18px 40px -22px rgba(11, 53, 88, 0.30);
+  --portal-shadow-sm: 0 10px 26px -18px rgba(11, 53, 88, 0.28);
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(198, 231, 255, 0.55), transparent 42%),
+    radial-gradient(circle at 88% 82%, rgba(65, 190, 253, 0.16), transparent 46%),
+    var(--portal-bg);
+  color: var(--portal-text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.4rem;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--portal-border);
+  box-shadow: var(--portal-shadow-sm);
+}
+
+.header-logo-lg {
+  width: 42px;
+  height: auto;
+  object-fit: contain;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--portal-secondary);
+  letter-spacing: 0.02em;
+}
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-badge {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: var(--portal-accent-soft);
+  color: var(--portal-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.logout-btn {
+  appearance: none;
+  border: 1px solid var(--portal-border);
+  background: #fff;
+  color: var(--portal-muted);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.logout-btn:hover {
+  color: var(--portal-danger);
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+/* ── Carga ───────────────────────────────────────────── */
+.loading-screen {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 3rem 1rem;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 3px solid var(--portal-accent-soft);
+  border-top-color: var(--portal-secondary);
+  animation: portal-spin 0.8s linear infinite;
+}
+
+@keyframes portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Bienvenida y pestañas ───────────────────────────── */
+.pd-welcome {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.2rem 1.25rem 1rem;
+}
+
+.pd-welcome h2 {
+  margin: 0 0 0.35rem;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--portal-primary);
+}
+
+.pd-welcome p {
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 0.95rem;
+}
+
+.pd-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 1.2rem;
+  padding: 0 1.25rem;
+}
+
+.pd-tab {
+  appearance: none;
+  border: 1px solid transparent;
+  background: #fff;
+  color: var(--portal-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--portal-shadow-sm);
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.pd-tab:hover {
+  color: var(--portal-primary);
+  border-color: var(--portal-border);
+  transform: translateY(-1px);
+}
+
+.pd-tab.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--portal-primary), var(--portal-secondary));
+  border-color: transparent;
+  box-shadow: 0 14px 28px -16px rgba(0, 31, 58, 0.65);
+}
+
+.pd-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+
+/* ── Resumen ─────────────────────────────────────────── */
+.pd-resumen {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.pd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.pd-stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.35rem 1rem;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-md);
+  box-shadow: var(--portal-shadow-sm);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pd-stat-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #eaf6ff;
+  color: var(--portal-secondary);
+  font-size: 1.15rem;
+}
+
+.pd-stat-value {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--portal-primary);
+  line-height: 1;
+}
+
+.pd-stat-label {
+  font-size: 0.78rem;
+  color: var(--portal-muted);
+}
+
+.pd-info-card {
+  padding: 1.35rem;
+  background: var(--portal-surface);
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-md);
+  box-shadow: var(--portal-shadow-sm);
+}
+
+.pd-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.9rem;
+}
+
+.pd-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  background: var(--portal-surface-soft);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-info-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748b;
+}
+
+.pd-info-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--portal-text);
+}
+
+.pd-hospital-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.pd-hospital-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #eaf6ff;
+  color: var(--portal-secondary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 1px solid #c6e7ff;
+}
+
+/* ── Actividad reciente ──────────────────────────────── */
+.pd-recent-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pd-recent-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-sm);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.pd-recent-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--portal-shadow-md);
+  border-color: #c6e7ff;
+}
+
+.pd-recent-date {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--portal-secondary);
+  background: #eaf6ff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  align-self: start;
+}
+
+.pd-recent-reason {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-recent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.pd-tag {
+  font-size: 0.68rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.pd-tag.hospital {
+  background: #eaf6ff;
+  color: #075985;
+}
+
+.pd-tag.diagnosis {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.pd-tag.treatment {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.pd-empty {
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--portal-muted);
+  background: #fff;
+  border: 1px dashed var(--portal-border);
+  border-radius: var(--portal-radius-md);
+}
+
+.pd-empty-icon {
+  font-size: 1.75rem;
+}
+
+/* ── Línea de tiempo ─────────────────────────────────── */
+.pd-timeline {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding-left: 1.5rem;
+}
+
+.pd-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.4rem;
+  top: 0.8rem;
+  bottom: 0.8rem;
+  width: 2px;
+  background: linear-gradient(180deg, var(--portal-accent), rgba(65, 190, 253, 0));
+}
+
+.pd-timeline-item {
+  position: relative;
+}
+
+.pd-timeline-dot {
+  position: absolute;
+  left: -1.25rem;
+  top: 1.15rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--portal-accent);
+  box-shadow: 0 0 0 4px rgba(65, 190, 253, 0.18);
+}
+
+.pd-timeline-card {
+  padding: 1.15rem;
+  background: #fff;
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-md);
+  box-shadow: var(--portal-shadow-sm);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pd-timeline-item.expanded .pd-timeline-card {
+  border-color: #c6e7ff;
+  box-shadow: var(--portal-shadow-md);
+}
+
+.pd-timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.pd-timeline-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 58px;
+  padding: 0.5rem 0.4rem;
+  background: #eaf6ff;
+  border-radius: 12px;
+  color: var(--portal-secondary);
+}
+
+.pd-date-day {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.pd-date-month,
+.pd-date-year {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pd-timeline-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pd-timeline-reason {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-timeline-meta {
+  font-size: 0.78rem;
+  color: var(--portal-muted);
+  margin-top: 0.15rem;
+}
+
+.pd-timeline-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.pd-badge {
+  font-size: 0.68rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.pd-badge.diagnosis {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.pd-badge.symptom {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pd-badge.treatment {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.pd-expand-icon {
+  font-size: 0.9rem;
+  color: var(--portal-secondary);
+}
+
+.pd-timeline-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--portal-border);
+  display: grid;
+  gap: 1rem;
+}
+
+/* ── Detalles clínicos ───────────────────────────────── */
+.pd-detail-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pd-detail-section h4 {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  color: var(--portal-primary);
+}
+
+.pd-symptom-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pd-symptom-chip {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.pd-diagnosis-card {
+  padding: 0.9rem 1rem;
+  background: #fff;
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-diagnosis-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.pd-diagnosis-name {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-severity {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  color: #fff;
+  font-weight: 800;
+}
+
+.pd-diagnosis-desc {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--portal-muted);
+  line-height: 1.5;
+}
+
+.pd-alert {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #991b1b;
+  font-size: 0.8rem;
+}
+
+.pd-vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.pd-vital {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--portal-surface-soft);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-vital-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.pd-vital-value {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-detail-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.pd-btn {
+  appearance: none;
+  border: 1px solid var(--portal-border);
+  background: #fff;
+  color: var(--portal-primary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pd-btn.primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--portal-primary), var(--portal-secondary));
+  border-color: transparent;
+  box-shadow: 0 14px 28px -16px rgba(0, 31, 58, 0.6);
+}
+
+.pd-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ── Tratamientos ────────────────────────────────────── */
+.pd-treatments {
+  display: grid;
+  gap: 1rem;
+}
+
+.pd-treatment-card {
+  padding: 1.2rem;
+  background: #fff;
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-md);
+  box-shadow: var(--portal-shadow-sm);
+}
+
+.pd-treatment-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.pd-treatment-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pd-treatment-disease {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-treatment-body {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.pd-meds-table {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pd-med-card {
+  padding: 0.9rem 1rem;
+  background: var(--portal-surface-soft);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-med-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.pd-med-name {
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.pd-med-summary {
+  font-size: 0.78rem;
+  color: var(--portal-muted);
+}
+
+.pd-med-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.pd-med-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.pd-med-field-label {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.pd-med-field-value {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--portal-text);
+}
+
+.pd-no-meds {
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 0.82rem;
+}
+
+.pd-recommendations-box {
+  padding: 0.9rem 1rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  color: #075985;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.pd-recommendations {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.pd-treatment-mini {
+  padding: 0.9rem 1rem;
+  background: var(--portal-surface-soft);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-meds-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.pd-med-item {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.pd-med-detail {
+  font-size: 0.75rem;
+  color: var(--portal-muted);
+}
+
+/* ── Modal ───────────────────────────────────────────── */
+.pd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.pd-modal {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  background: #fff;
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-lg);
+  box-shadow: var(--portal-shadow-lg);
+}
+
+.pd-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--portal-border);
+  background: linear-gradient(135deg, #f8fafc, #fff);
+}
+
+.pd-modal-close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-size: 1.1rem;
+  color: var(--portal-muted);
+  cursor: pointer;
+}
+
+.pd-modal-body {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.pd-modal-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pd-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.pd-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--portal-surface-soft);
+  border: 1px solid var(--portal-border);
+  border-radius: 12px;
+}
+
+.pd-modal-label {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.pd-modal-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--portal-text);
+}
+
+.pd-modal-loading {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header {
+    padding: 0.8rem 1rem;
+  }
+
+  .pd-welcome,
+  .pd-tabs,
+  .pd-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .pd-stats-grid,
+  .pd-info-grid,
+  .pd-vitals-grid,
+  .pd-med-details,
+  .pd-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

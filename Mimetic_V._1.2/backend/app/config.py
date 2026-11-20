@@ -22,6 +22,11 @@ GMAIL_API_CLIENT_ID = os.getenv("GMAIL_API_CLIENT_ID", "")
 GMAIL_API_CLIENT_SECRET = os.getenv("GMAIL_API_CLIENT_SECRET", "")
 GMAIL_API_REFRESH_TOKEN = os.getenv("GMAIL_API_REFRESH_TOKEN", "")
 
+# Proveedor de correo: auto | gmail_api | sendgrid | smtp | none
+EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "auto").strip().lower()
+# Solo para desarrollo: devuelve el código en la respuesta si no hay proveedor configurado.
+DEV_EMAIL_FALLBACK = os.getenv("DEV_EMAIL_FALLBACK", "").lower() == "true"
+
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
