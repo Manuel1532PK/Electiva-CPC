@@ -4,8 +4,8 @@
 **Repositorio:** `https://github.com/Manuel1532PK/Electiva-CPC.git`
 **Directorio de la aplicación:** `Mimetic_V._1.2/backend`
 **Servicio Render:** `mimetic-ai-api`
-**URL de producción:** `https://mimetic-ai-api.onrender.com`
-**Frontend consumidor:** `https://mimetic-ai.vercel.app` (desplegado desde la rama `produccion-frontend`)
+**URL de producción:** `https://mimetic-ai-api-v12.onrender.com`
+**Frontend consumidor:** `https://mimetic-ai-v12.vercel.app` (desplegado desde la rama `produccion-frontend`)
 **Fecha:** 2026-11-19
 
 ---
@@ -86,7 +86,7 @@ Configurar en el servicio de Render (los campos con `sync: false` se piden al cr
 | `JWT_SECRET` | valor aleatorio largo | **Sí en producción** | No dejar el valor por defecto `mimetic-ai-secret-change-in-production` |
 | `JWT_ALGORITHM` | `HS256` | No | |
 | `JWT_EXPIRATION_HOURS` | `24` | No | |
-| `CORS_ORIGINS` | `https://mimetic-ai.vercel.app` | **Sí** | Debe incluir el dominio exacto del frontend; separar varios con comas |
+| `CORS_ORIGINS` | `https://mimetic-ai-v12.vercel.app` | **Sí** | Debe incluir el dominio exacto del frontend; separar varios con comas |
 | `LOG_LEVEL` | `INFO` | No | Logging JSON estructurado |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | credenciales OAuth | No | Login con Google |
 | `GMAIL_API_CLIENT_ID` / `GMAIL_API_CLIENT_SECRET` / `GMAIL_API_REFRESH_TOKEN` | credenciales Gmail API | Recomendado | En Render free, SMTP saliente suele estar bloqueado; usar Gmail API por HTTPS |
@@ -97,8 +97,8 @@ Configurar en el servicio de Render (los campos con `sync: false` se piden al cr
 
 ## 6. Verificación post-despliegue
 
-1. `curl https://mimetic-ai-api.onrender.com/health` → HTTP 200 con `"status": "ok"` (o `degraded` si Mongo no conecta) y header `X-Request-ID`.
-2. Abrir `https://mimetic-ai-api.onrender.com/docs` y comprobar Swagger UI.
+1. `curl https://mimetic-ai-api-v12.onrender.com/health` → HTTP 200 con `"status": "ok"` (o `degraded` si Mongo no conecta) y header `X-Request-ID`.
+2. Abrir `https://mimetic-ai-api-v12.onrender.com/docs` y comprobar Swagger UI.
 3. Probar `POST /api/auth/register` y `POST /api/auth/login` con un usuario de prueba.
 4. Desde el frontend en Vercel, confirmar que login y chat consultan la API sin errores CORS.
 5. Revisar los logs en Render Dashboard → *Logs* y verificar que no hay excepciones en el arranque.

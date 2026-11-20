@@ -4,6 +4,6 @@ const apiUrl = apiFromEnv && apiFromEnv.trim() !== ''
   ? apiFromEnv
   : import.meta.env.DEV
     ? ''
-    : 'https://mimetic-ai-api.onrender.com'
+    : 'https://mimetic-ai-api-v12.onrender.com'
 
 export const API = apiUrl
