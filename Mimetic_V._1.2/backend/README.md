@@ -118,4 +118,4 @@ Cubren normalización, seed idempotente, dedupe, CRUD del catálogo, importació
 
 ## Despliegue (Render)
 
-El servicio se despliega con el Blueprint `render.yaml` de esta carpeta, apuntando a la rama `produccion-backend` y al `rootDir: Mimetic_V._1.2/backend`. El procedimiento completo (variables de entorno, health check, verificación y rollback) está en [`Docs/plan_despliegue_backend.md`](../../Docs/plan_despliegue_backend.md).
+El servicio se despliega con el Blueprint `render.yaml` de esta carpeta, apuntando a la rama `produccion-backend` y al `rootDir: Mimetic_V._1.2/backend`. El procedimiento completo (variables de entorno, health check, verificación y rollback) está en [`Docs/prompt/planBackend.md`](../../Docs/prompt/planBackend.md).

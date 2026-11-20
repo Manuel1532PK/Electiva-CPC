@@ -158,7 +158,7 @@ frontend/
 
 Esta rama (`produccion-backend`) contiene la configuración y el plan de despliegue del **backend en Render**:
 
-- [`Docs/plan_despliegue_backend.md`](Docs/plan_despliegue_backend.md) — Blueprint, rama, `rootDir`, variables de entorno, verificación y rollback.
+- [`Docs/prompt/planBackend.md`](Docs/prompt/planBackend.md) — Blueprint, rama, `rootDir`, variables de entorno, verificación y rollback.
 - [`Docs/prompt/plan_auditoria_mimetic_v1.2.md`](Docs/prompt/plan_auditoria_mimetic_v1.2.md) — plan de auditoría técnica.
 - [`Docs/tecnologias_especificas_mimetic.md`](Docs/tecnologias_especificas_mimetic.md) — plan de tecnologías.
 

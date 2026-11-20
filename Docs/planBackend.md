@@ -12,7 +12,7 @@
 
 ## 1. Alcance y supuestos
 
-Este plan cubre únicamente el **backend** (FastAPI + Motor/MongoDB). El frontend se despliega por separado en Vercel siguiendo `Docs/plan_despliegue_frontend.md` de la rama `produccion-frontend`.
+Este plan cubre únicamente el **backend** (FastAPI + Motor/MongoDB). El frontend se despliega por separado en Vercel siguiendo `Docs/prompt/planFrontend.md` de la rama `produccion-frontend`.
 
 Supuestos:
 
