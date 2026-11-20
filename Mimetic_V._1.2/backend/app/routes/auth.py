@@ -42,6 +42,21 @@ def create_access_token(user_id: str, hospital_id: str = "") -> str:
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
+def _deliver_verification_code(email: str, code: str, name: str) -> dict:
+    """Entrega el código y falla explícitamente si ningún proveedor lo envió."""
+    result = send_verification_code(email, code, name)
+    if not result["delivered"]:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"No se pudo enviar el correo de verificación: {result['error']}",
+        )
+    response = {"message": "Verification code sent to email", "email": email}
+    if result.get("dev_code"):
+        response["dev_code"] = result["dev_code"]
+        response["message"] = "Código generado en modo desarrollo (revisa los logs del backend)"
+    return response
+
+
 async def require_super_admin(current_user: UserOut = Depends(get_current_user)):
     if current_user.role != "super_admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Se requiere acceso de super administrador")
@@ -59,10 +74,9 @@ async def test_email(data: dict, current_user: UserOut = Depends(require_admin))
     email = data.get("email", "")
     if not email:
         raise HTTPException(status_code=400, detail="El correo electrónico es obligatorio")
-    from app.email.sender import send_verification_code
     code = str(random.randint(100000, 999999))
-    send_verification_code(email, code, "Test User")
-    return {"message": "Email sent (check Render logs for errors)", "code_preview": code}
+    response = _deliver_verification_code(email, code, "Test User")
+    return {"message": response["message"], "code_preview": code}
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -101,8 +115,7 @@ async def register(request: Request, data: UserCreate):
                 {"$set": {"code": code, "expires_at": datetime.utcnow() + timedelta(minutes=10)}},
                 upsert=True,
             )
-            send_verification_code(data.email, code, data.name)
-            return {"message": "Verification code sent to email", "email": data.email}
+            return _deliver_verification_code(data.email, code, data.name)
 
     if data.document_number:
         doc_exists = await db.users.find_one({"document_number": data.document_number})
@@ -137,8 +150,7 @@ async def register(request: Request, data: UserCreate):
         upsert=True,
     )
 
-    send_verification_code(data.email, code, data.name)
-    return {"message": "Verification code sent to email", "email": data.email}
+    return _deliver_verification_code(data.email, code, data.name)
 
 
 @router.post("/verify-email", response_model=Token)
@@ -359,8 +371,7 @@ async def social_register(request: Request, data: dict):
         {"$set": {"code": code, "expires_at": datetime.utcnow() + timedelta(minutes=10)}},
         upsert=True,
     )
-    send_verification_code(email, code, name)
-    return {"message": "Verification code sent to email", "email": email}
+    return _deliver_verification_code(email, code, name)
 
 
 @router.get("/me", response_model=UserOut)

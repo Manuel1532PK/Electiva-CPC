@@ -24,6 +24,7 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false)
   const [step, setStep] = useState<'form' | 'verify'>('form')
   const [code, setCode] = useState('')
+  const [devCode, setDevCode] = useState('')
   const [verifying, setVerifying] = useState(false)
   const [cities, setCities] = useState<LocationOption[]>([])
   const [loadingCities, setLoadingCities] = useState(false)
@@ -95,6 +96,7 @@ export default function Register() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || 'Registration failed')
+      setDevCode(data.dev_code || '')
       setStep('verify')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al registrar')
@@ -231,6 +233,11 @@ export default function Register() {
             <p className="auth-hint">
               Hemos enviado un código de verificación a <strong>{form.email}</strong>
             </p>
+            {devCode && (
+              <div className="auth-hint" style={{ marginBottom: 12 }}>
+                Modo desarrollo: tu código es <strong>{devCode}</strong>
+              </div>
+            )}
             {error && <div className="auth-error">{error}</div>}
             <div className="auth-field">
               <label>Código de verificación</label>

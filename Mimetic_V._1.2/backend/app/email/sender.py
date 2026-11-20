@@ -1,20 +1,26 @@
 import smtplib
 import json
 import base64
-import threading
 import logging
 from datetime import datetime
 import urllib.request
 import urllib.parse
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.utils import parseaddr
 from app.config import (
     SMTP_HOST, SMTP_PORT, SMTP_USE_SSL, SMTP_USER, SMTP_PASSWORD,
     SENDGRID_API_KEY, FROM_EMAIL,
     GMAIL_API_CLIENT_ID, GMAIL_API_CLIENT_SECRET, GMAIL_API_REFRESH_TOKEN,
+    EMAIL_PROVIDER, DEV_EMAIL_FALLBACK,
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _from_email() -> str:
+    """Dirección 'from' configurable; evita quedar fija en mimeticvalidated@gmail.com."""
+    return parseaddr(FROM_EMAIL)[1] or "mimeticvalidated@gmail.com"
 
 
 def _build_html(code: str, name: str) -> str:
@@ -94,12 +100,14 @@ def _send_smtp(to_email: str, html: str):
 
     if SMTP_USE_SSL:
         with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=15) as server:
-            server.login(SMTP_USER, SMTP_PASSWORD)
+            if SMTP_USER:
+                server.login(SMTP_USER, SMTP_PASSWORD)
             server.send_message(msg)
     else:
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASSWORD)
+            if SMTP_USER:
+                server.starttls()
+                server.login(SMTP_USER, SMTP_PASSWORD)
             server.send_message(msg)
     logger.info(f"Email sent via SMTP to {to_email}")
 
@@ -107,7 +115,7 @@ def _send_smtp(to_email: str, html: str):
 def _send_sendgrid(to_email: str, html: str):
     data = json.dumps({
         "personalizations": [{"to": [{"email": to_email}]}],
-        "from": {"email": "mimeticvalidated@gmail.com", "name": "MIMETIC"},
+        "from": {"email": _from_email(), "name": "MIMETIC"},
         "subject": "Código de verificación - MIMETIC",
         "content": [{"type": "text/html", "value": html}],
     }).encode()
@@ -141,7 +149,7 @@ def _send_gmail_api(to_email: str, html: str):
     access_token = token_data["access_token"]
 
     msg = MIMEText(html, "html")
-    msg["From"] = "MIMETIC <mimeticvalidated@gmail.com>"
+    msg["From"] = FROM_EMAIL
     msg["To"] = to_email
     msg["Subject"] = "Código de verificación - MIMETIC"
     raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
@@ -159,32 +167,88 @@ def _send_gmail_api(to_email: str, html: str):
         logger.info(f"Email sent via Gmail API to {to_email}: {resp.status}")
 
 
-def _send(to_email: str, code: str, name: str):
+def _dev_result(code: str, error: str | None = None) -> dict:
+    logger.warning(
+        "DEV_EMAIL_FALLBACK: verification code for local testing = %s%s",
+        code,
+        f" (provider error: {error})" if error else "",
+    )
+    return {
+        "delivered": True,
+        "provider": "dev_fallback",
+        "error": error,
+        "dev_code": code,
+    }
+
+
+def _send(to_email: str, code: str, name: str) -> dict:
+    """Envía el código y devuelve el resultado real de la entrega."""
     html = _build_html(code, name)
+    gmail_ready = bool(
+        GMAIL_API_CLIENT_ID and GMAIL_API_CLIENT_SECRET and GMAIL_API_REFRESH_TOKEN
+    )
 
-    if GMAIL_API_CLIENT_ID and GMAIL_API_CLIENT_SECRET and GMAIL_API_REFRESH_TOKEN:
+    providers = []
+    if EMAIL_PROVIDER == "gmail_api":
+        if gmail_ready:
+            providers.append(("gmail_api", _send_gmail_api))
+    elif EMAIL_PROVIDER == "sendgrid":
+        if SENDGRID_API_KEY:
+            providers.append(("sendgrid", _send_sendgrid))
+    elif EMAIL_PROVIDER == "smtp":
+        providers.append(("smtp", _send_smtp))
+    elif EMAIL_PROVIDER == "none":
+        pass
+    else:  # auto: prioridad Gmail API -> SendGrid -> SMTP
+        if gmail_ready:
+            providers.append(("gmail_api", _send_gmail_api))
+        if SENDGRID_API_KEY:
+            providers.append(("sendgrid", _send_sendgrid))
+        if SMTP_USER and SMTP_PASSWORD:
+            providers.append(("smtp", _send_smtp))
+
+    if not providers:
+        if DEV_EMAIL_FALLBACK:
+            return _dev_result(code)
+        logger.error("No email provider configured, unable to send to %s", to_email)
+        return {
+            "delivered": False,
+            "provider": None,
+            "error": "No hay proveedor de correo configurado",
+            "dev_code": None,
+        }
+
+    last_error = None
+    for provider_name, sender in providers:
         try:
-            _send_gmail_api(to_email, html)
-            return
+            sender(to_email, html)
+            return {
+                "delivered": True,
+                "provider": provider_name,
+                "error": None,
+                "dev_code": None,
+            }
         except Exception as e:
-            logger.error(f"Gmail API failed for {to_email}: {e}")
+            last_error = f"{provider_name}: {e}"
+            logger.error("Email delivery failed for %s (%s): %s", to_email, provider_name, e)
 
-    if SENDGRID_API_KEY:
-        try:
-            _send_sendgrid(to_email, html)
-            return
-        except Exception as e:
-            logger.error(f"SendGrid failed for {to_email}: {e}")
-
-    if SMTP_USER and SMTP_PASSWORD:
-        try:
-            _send_smtp(to_email, html)
-            return
-        except Exception as e:
-            logger.error(f"SMTP failed for {to_email}: {e}")
-
-    logger.warning(f"No email provider configured, unable to send to {to_email}")
+    if DEV_EMAIL_FALLBACK:
+        return _dev_result(code, last_error)
+    return {
+        "delivered": False,
+        "provider": None,
+        "error": last_error or "No se pudo entregar el correo",
+        "dev_code": None,
+    }
 
 
-def send_verification_code(to_email: str, code: str, name: str):
-    threading.Thread(target=_send, args=(to_email, code, name), daemon=True).start()
+def send_verification_code(to_email: str, code: str, name: str) -> dict:
+    """API pública: entrega sincrónica para que el endpoint sepa si falló."""
+    result = _send(to_email, code, name)
+    logger.info(
+        "Verification email result for %s: delivered=%s provider=%s",
+        to_email,
+        result["delivered"],
+        result["provider"],
+    )
+    return result
