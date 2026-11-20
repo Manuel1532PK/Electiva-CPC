@@ -58,12 +58,19 @@ def session_to_out(s: dict) -> SessionOut:
         heart_rate=s.get("heart_rate", ""),
         respiratory_rate=s.get("respiratory_rate", ""),
         temperature=s.get("temperature", ""),
+        oxygen_saturation=s.get("oxygen_saturation", ""),
         weight=s.get("weight", ""),
         height=s.get("height", ""),
+        triage_level=s.get("triage_level", 0),
+        triage_system=s.get("triage_system", ""),
+        triage_discriminators=s.get("triage_discriminators", ""),
+        triage_score=s.get("triage_score", ""),
+        labs=s.get("labs", {}),
         symptoms=s.get("symptoms", []),
         diagnoses=s.get("diagnoses", []),
         treatment=s.get("treatment"),
         report_html=s.get("report_html", ""),
+        doctor_review=s.get("doctor_review"),
     )
 
 
