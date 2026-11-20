@@ -3,8 +3,8 @@
 **Rama de producción:** `produccion-frontend`
 **Repositorio:** `https://github.com/Manuel1532PK/Electiva-CPC.git`
 **Directorio de la aplicación:** `Mimetic_V._1.2/frontend`
-**URL de producción:** `https://mimetic-ai.vercel.app`
-**API consumida:** `https://mimetic-ai-api.onrender.com` (servicio desplegado desde la rama `produccion-backend`)
+**URL de producción:** `https://mimetic-ai-v12.vercel.app`
+**API consumida:** `https://mimetic-ai-api-v12.onrender.com` (servicio desplegado desde la rama `produccion-backend`)
 **Fecha:** 2026-11-19
 
 ---
@@ -16,7 +16,7 @@ Este plan cubre únicamente el **frontend** (React + Vite + TypeScript). El back
 Se asume que:
 
 - El repositorio ya está importado en Vercel con acceso del equipo.
-- El backend Render ya responde en `https://mimetic-ai-api.onrender.com/health`.
+- El backend Render ya responde en `https://mimetic-ai-api-v12.onrender.com/health`.
 - No se almacenan secretos en el repositorio; los valores sensibles se configuran en el panel de Vercel.
 
 ## 2. Requisitos previos
@@ -71,17 +71,17 @@ Configurar en **Project Settings → Environment Variables** para Production, Pr
 
 | Variable | Valor | Observación |
 |---|---|---|
-| `VITE_API_URL` | `https://mimetic-ai-api.onrender.com` | Debe apuntar al backend Render. `src/config.ts` usa este mismo valor por defecto en producción si la variable no existe, pero se recomienda declararla explícitamente |
+| `VITE_API_URL` | `https://mimetic-ai-api-v12.onrender.com` | Debe apuntar al backend Render. `src/config.ts` usa este mismo valor por defecto en producción si la variable no existe, pero se recomienda declararla explícitamente |
 
 > No incluir `VITE_API_URL` con `http://localhost:8001` en Production: en dev el proxy de `vite.config.ts` redirige `/api` a `127.0.0.1:8001`, pero en el bundle de producción no existe ese proxy.
 
 ## 6. Verificación post-despliegue
 
-1. Abrir `https://mimetic-ai.vercel.app` y comprobar que carga la pantalla de login.
+1. Abrir `https://mimetic-ai-v12.vercel.app` y comprobar que carga la pantalla de login.
 2. Navegar directamente a `/register`, `/admin`, `/chat`, `/paciente`: ninguna debe devolver 404 (rewrite SPA).
-3. En DevTools → Network, confirmar que las peticiones a `/api/...` salen hacia `https://mimetic-ai-api.onrender.com`.
+3. En DevTools → Network, confirmar que las peticiones a `/api/...` salen hacia `https://mimetic-ai-api-v12.onrender.com`.
 4. Probar login con un usuario `admin` y verificar que el panel carga datos del backend.
-5. Confirmar que no hay errores CORS en consola. Si aparecen, el backend debe incluir `https://mimetic-ai.vercel.app` en `CORS_ORIGINS` (ver plan de backend).
+5. Confirmar que no hay errores CORS en consola. Si aparecen, el backend debe incluir `https://mimetic-ai-v12.vercel.app` en `CORS_ORIGINS` (ver plan de backend).
 6. Revisar los logs de la función en Vercel ante cualquier error 5xx.
 
 ## 7. Rollback

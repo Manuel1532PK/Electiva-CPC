@@ -24,7 +24,7 @@ services:
       - key: JWT_EXPIRATION_HOURS
         value: "24"
       - key: CORS_ORIGINS
-        value: https://mimetic-ai.vercel.app
+        value: https://mimetic-ai-v12.vercel.app
       - key: LOG_LEVEL
         value: INFO
       - key: GEMINI_API_KEY
